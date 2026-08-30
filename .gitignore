@@ -1,0 +1,38 @@
+# Build output
+/target/
+
+# Local deployment bundles and private acceptance material
+/dist/
+/deploy/
+/docs/ACCEPTANCE-*.md
+
+# Runtime data and secrets
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.token
+*.log
+*.lck
+*.bak
+*.ini
+.env
+.env.*
+config.production*.yml
+/plugins/
+/logs/
+
+# Downloaded binaries and archives
+*.exe
+*.zip
+*.7z
+*.rar
+*.jar
+
+# IDE and OS files
+/.idea/
+/.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini

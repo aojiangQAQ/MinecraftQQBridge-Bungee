@@ -1,0 +1,5 @@
+name: MinecraftQQBridge-Bungee # BungeeCord 插件名称
+version: '${project.version}' # 由 Maven 构建版本自动填充
+main: h_aaa.mcqqbridge.MinecraftQQBridgePlugin # 插件入口类
+author: h_aaa # 原项目作者标识
+description: OneBot 11 QQ binding and BungeeCord network access control. # 插件用途说明

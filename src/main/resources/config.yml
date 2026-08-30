@@ -1,0 +1,106 @@
+# 首次部署时先填写群号、管理员 QQ 和 OneBot Token，再启用 OneBot。
+onebot: # OneBot 11 正向 WebSocket 连接设置
+  enabled: false # 完成群号和 Token 配置后再开启
+  url: "ws://127.0.0.1:3001/" # 只允许本机回环地址
+  token: "" # 与 LLBot 完全一致的高强度 Token
+  connect-timeout-ms: 5000 # 单次连接超时毫秒数
+  request-timeout-ms: 5000 # OneBot 动作响应超时毫秒数
+  heartbeat-timeout-ms: 90000 # 超过此时间无心跳则主动重连
+  reconnect-min-seconds: 1 # 自动重连最短等待秒数
+  reconnect-max-seconds: 60 # 自动重连最长等待秒数
+
+# 只有这些群的消息和成员事件会被处理。QQ 号必须使用带引号的字符串。
+groups: # 允许处理的 QQ 群
+  allowed: [] # 群号列表，必须写成带引号的数字字符串
+
+admins: # QQ 管理命令授权
+  user-ids: [] # 管理员 QQ 列表，必须写成带引号的数字字符串
+  # 开启后，管理员 QQ 还必须同时具有群主或管理员身份。
+  require-group-role: false # 是否额外校验 OneBot 群角色
+
+access-control: # BungeeCord 登录入口门禁
+  enabled: true # 是否拒绝未绑定玩家
+  check-timeout-ms: 3000 # 异步数据库检查超时毫秒数
+  denied-message: |- # 未绑定时显示给玩家的消息
+    您尚未绑定 QQ，暂时无法进入服务器。
+    请在指定 QQ 群发送：绑定 您的MinecraftID
+  database-error-message: |- # 数据库异常或超时时的默认拒绝消息
+    登录验证服务暂时不可用，请稍后重试。
+  revoked-message: |- # 在线玩家被解绑时的断开消息
+    您的 QQ 绑定已被解除，当前连接已断开。
+
+database: # SQLite 主数据库设置
+  file: "bridge.db" # 文件必须位于本插件数据目录内
+  busy-timeout-ms: 2000 # SQLite 被占用时的等待毫秒数
+  queue-capacity: 1024 # 异步数据库任务队列上限
+
+migration: # 旧版 whitelist.db 自动迁移
+  enabled: true # 启动时是否寻找并迁移旧库
+  # 相对路径以本插件数据目录为基准；也可以填写绝对路径。
+  legacy-whitelist-db-candidates: # 按顺序寻找的旧库候选路径
+    - "../mcqqrun/whitelist.db"
+    - "../mcqqrun-BungeeCord/whitelist.db"
+    - "whitelist.db"
+  backup-directory: "migration-backups" # 原库校验备份目录
+
+commands: # QQ 群命令文本与普通成员权限
+  bind: "绑定 " # 绑定 Minecraft ID 的命令前缀
+  my-binding: "我的绑定" # 查询自己绑定的完整命令
+  query-other: "他人绑定 " # 查询其他 QQ 的命令前缀
+  unbind-player: "删除ID " # 管理员按玩家名解绑前缀
+  unbind-qq: "删除QQ " # 管理员按 QQ 解绑前缀
+  status: "服务器状态" # 查询代理状态的完整命令
+  menu: "菜单" # 显示群命令菜单
+  verify: "验证 " # 提交入群验证码的命令前缀
+  allow-members-query-other: true # 是否允许普通群成员查询他人绑定
+  allow-members-status: true # 是否允许普通群成员查询服务器状态
+
+messages: # 可自定义回复文本及占位符
+  bind-success: "%at% ID绑定成功：%player%"
+  qq-already-bound: "%at% 您的 QQ 已绑定：%player%"
+  player-already-bound: "%at% 该 Minecraft ID 已被其他 QQ 绑定。"
+  invalid-player-name: "%at% Minecraft ID 只能包含 3-16 位字母、数字或下划线。"
+  my-binding: "%at% 您绑定的 ID 是：%player%"
+  not-bound: "%at% 暂未找到绑定记录。"
+  other-binding: "%at% 查询结果：QQ %qq% 绑定了 %player%"
+  unbind-success: "解绑成功：QQ %qq% / ID %player%"
+  not-admin: "您没有执行此命令的权限。"
+  invalid-qq: "%at% QQ 号格式无效，请发送纯数字 QQ 或 @目标成员。"
+  command-usage: "%at% 命令参数不完整，请发送“菜单”查看用法。"
+  verification-not-pending: "%at% 当前没有待完成的入群验证。"
+  legacy-conflict: "%at% 该 QQ 或 Minecraft ID 涉及旧库冲突，已安全隔离，请联系管理员处理。"
+  database-error: "数据库暂时不可用，请稍后重试。"
+  status: "在线玩家：%online% | OneBot：%onebot% | 数据库：%database%"
+  menu: |- # 群命令菜单正文
+    可用命令：
+    绑定 <Minecraft ID>
+    我的绑定
+    他人绑定 <QQ 或 @成员>
+    服务器状态
+
+group-events: # 入群、退群和群名片功能
+  welcome: # 新成员欢迎消息
+    enabled: false # 是否发送欢迎消息
+    message: "%at% 欢迎加入本群。"
+  leave-unbind: # 成员离群后的处理
+    enabled: false # 是否自动解除离群成员绑定
+  verification: # 入群验证码设置
+    # 可选：OFF、FIXED、RANDOM。FIXED 与 RANDOM 不会同时生效。
+    mode: "OFF" # 验证模式
+    expires-minutes: 5 # 验证码有效分钟数
+    max-attempts: 5 # 最多错误尝试次数
+    random-code-length: 6 # 随机验证码长度
+    fixed-code: "我不是机器人"
+    kick-on-expire: true # 过期或次数耗尽后是否移出群
+    prompt: "%at% 请在 %minutes% 分钟内发送：验证 %code%"
+    success: "%at% 验证成功。"
+    failed: "%at% 验证码错误。"
+    expired: "%at% 验证已过期。"
+  group-card: # 绑定成功后的群名片设置
+    enabled: false # 是否自动更新群名片
+    format: "%player%" # 支持玩家名等消息占位符
+
+# 为后续 Bukkit companion 预留。当前版本不会主动向子服发送数据。
+companion-api: # 后续 Bukkit companion 的预留协议
+  protocol-version: 1 # 协议版本号
+  channel: "MCQQB:Bridge" # 旧版 Bukkit 兼容的插件消息频道
