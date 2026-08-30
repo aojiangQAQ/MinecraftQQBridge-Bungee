@@ -1,17 +1,11 @@
-# LLBot 权限申请说明
+# LLBot 使用权限申请
 
-下面内容可以直接发给 LLBot 管理员。提交前请补充机器人 QQ、目标群和联系人。
-
-## 可直接发送的申请文本
-
-```text
 您好，我申请使用 LLBot 为一个自建 Minecraft 服务器提供 QQ 群账号绑定与登录门禁。
 
 项目名称：MinecraftQQBridge-Bungee
 源码地址：https://github.com/aojiangQAQ/MinecraftQQBridge-Bungee
 部署方式：自建 Windows VPS，本机 NTQQ + LLBot + BungeeCord，不提供托管机器人服务。
-机器人 QQ：<请填写>
-目标 QQ 群：<请填写；仅处理配置白名单内的群>
+机器人 QQ 和目标 QQ 群会在审核沟通中单独提供，公开仓库不记录生产账号信息。
 
 主要用途：
 1. 群成员发送“绑定 <Minecraft ID>”，建立 QQ 与 Minecraft ID 的一对一绑定。
@@ -40,7 +34,6 @@
 - 账号登录和扫码由账号持有人本人完成。
 
 如果 set_group_kick 或群名片权限不符合审核要求，我可以关闭对应可选功能，只保留绑定、查询、状态和消息回复。请协助审核并告知还需要提供哪些材料，谢谢。
-```
 
 ## 审核材料清单
 
